@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Pawan IoT — Technical approach, architecture and working">
+<title>Pawan IoT | Technical Approach</title>
+<style>
+:root{--bg:#f5f7fc;--card:#ffffff;--card2:#eef2ff;--line:#d2d9ea;--text:#172033;--muted:#5f6b80;--green:#5b4bdb;--blue:#2563eb;--yellow:#b7791f;--red:#c94040}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#f7fbf8,#eef7f2 48%,#f7fbf8);color:var(--text);font:16px/1.65 Inter,Segoe UI,Arial,sans-serif}
+a{color:inherit;text-decoration:none}.wrap{width:min(1160px,92%);margin:auto}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{height:66px;display:flex;align-items:center;justify-content:space-between}.logo{font-weight:900;letter-spacing:.6px}.logo i{color:var(--green);font-style:normal}
+nav{display:flex;gap:20px}nav a{font-size:13px;color:var(--muted)}nav a:hover{color:var(--text)}
+.hero{padding:82px 0 65px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--green);text-transform:uppercase}
+h1{font-size:clamp(40px,6vw,72px);line-height:1.02;margin:12px 0 20px;max-width:900px}
+h2{font-size:32px;line-height:1.15;margin:7px 0 12px}h3{margin:6px 0 8px}
+.hero p,.lead{color:var(--muted);font-size:18px;max-width:850px}.pills{display:flex;flex-wrap:wrap;gap:9px;margin:25px 0}.pill{border:1px solid var(--line);border-radius:99px;padding:5px 11px;background:#f1f4fa;color:#43506a;font-size:12px}
+.btn{display:inline-block;padding:10px 15px;border:1px solid var(--line);border-radius:9px;margin-right:8px;background:var(--card);font-weight:700}.btn.main{background:var(--green);color:#06130d;border-color:var(--green)}
+section{padding:58px 0}.sectiontop{margin-bottom:28px}.sectiontop p{color:var(--muted);max-width:820px}
+.arch{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.box{position:relative;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:15px;padding:18px;min-height:230px}.box .n{width:31px;height:31px;display:grid;place-items:center;background:#e7e4ff;color:var(--green);border-radius:8px;font-weight:900}.box p,.box li{color:var(--muted);font-size:13px}.box ul{padding-left:18px}.arrow{position:absolute;right:-17px;top:46%;color:var(--green);font-size:22px;z-index:2}
+@media(max-width:900px){.arch{grid-template-columns:1fr 1fr}.arrow{display:none}}@media(max-width:600px){nav{display:none}.arch{grid-template-columns:1fr}}
+.flow{margin-top:15px;padding:17px;background:#f1f4fa;border:1px solid var(--line);border-radius:12px;overflow:auto;color:#4035a8;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:20px}.card p,.card li{color:var(--muted);font-size:14px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.steps{display:grid;gap:12px}.step{display:grid;grid-template-columns:48px 1fr;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:17px}.stepnum{width:42px;height:42px;border-radius:11px;background:#e7e4ff;color:var(--green);display:grid;place-items:center;font-weight:900}.step p{margin:0;color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden}th,td{text-align:left;padding:12px 13px;border-bottom:1px solid var(--line);font-size:14px}th{background:#eef2ff}td{color:var(--muted)}
+.callout{margin-top:18px;padding:17px 19px;border-left:4px solid var(--green);background:#f0efff;border-radius:0 11px 11px 0}.callout.yellow{border-color:var(--yellow);background:#fff5dc}
+pre{background:#f0f3f9;border:1px solid var(--line);padding:17px;border-radius:12px;overflow:auto;color:#39445a;font-size:13px}
+footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:13px}
+</style>
+
+<style>
+.cad-gallery{display:grid;grid-template-columns:1.7fr 1fr;gap:16px;margin-top:20px}
+.cad-gallery figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:0 8px 25px rgba(30,45,80,.08)}
+.cad-gallery img{display:block;width:100%;height:auto;object-fit:cover}
+.cad-main img{aspect-ratio:16/9;object-fit:cover}
+.cad-side{display:grid;gap:16px}
+.cad-side img{aspect-ratio:16/9;object-fit:cover}
+.cad-gallery figcaption{padding:10px 13px;color:var(--muted);font-size:13px}
+@media(max-width:800px){.cad-gallery{grid-template-columns:1fr}.cad-side{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.cad-side{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<header><div class="wrap nav">
+<a class="logo" href="#top">PAWAN <i>IoT</i></a>
+<nav><a href="#architecture">Architecture</a><a href="#eunit">E-Unit</a><a href="#lora">LoRa</a><a href="#gateway">Gateway</a><a href="#ai">Cloud & AI</a><a href="#cad">CAD Design</a><a href="#deployment">Deployment</a></nav>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap">
+<div class="eyebrow">Technical Approach • Environmental Intelligence Network</div>
+<h1>How Pawan IoT Works</h1>
+<p>A distributed, AI-powered environmental monitoring network designed to detect hazards locally, validate them regionally, communicate through resilient field networking, and turn environmental observations into actionable information.</p>
+<div class="pills"><span class="pill">ESP32-P4</span><span class="pill">Edge AI</span><span class="pill">Multi-hop LoRa</span><span class="pill">Regional Validation</span><span class="pill">Cloud Data Fusion</span><span class="pill">Multi-hazard</span></div>
+<a class="btn main" href="#architecture">Explore the architecture ↓</a><a class="btn" href="#deployment">Deployment model</a>
+</div></section>
+
+<section id="architecture"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">01 — System Architecture</div><h2>Five layers, one continuous data path</h2><p>Each layer has a different job: sensing, communication, regional validation, cloud intelligence and user-facing action.</p></div>
+<div class="arch">
+<div class="box"><div class="n">1</div><h3>E-Unit</h3><p>Field sensing + local Edge AI</p><ul><li>ESP32-P4</li><li>Hazard-specific sensors</li><li>Preprocessing</li><li>Risk + confidence</li></ul><span class="arrow">→</span></div>
+<div class="box"><div class="n">2</div><h3>LoRa Network</h3><p>Resilient field communication</p><ul><li>Multi-hop routing</li><li>Packet identification</li><li>Buffering</li><li>Reliable delivery</li></ul><span class="arrow">→</span></div>
+<div class="box"><div class="n">3</div><h3>Gateway</h3><p>Regional aggregation</p><ul><li>Collects nodes</li><li>Cross-node validation</li><li>Anomaly detection</li><li>Internet/cellular backhaul</li></ul><span class="arrow">→</span></div>
+<div class="box"><div class="n">4</div><h3>Cloud + Server AI</h3><p>Data fusion + forecasting</p><ul><li>FastAPI</li><li>PostgreSQL</li><li>External datasets</li><li>Temporal analysis</li></ul><span class="arrow">→</span></div>
+<div class="box"><div class="n">5</div><h3>Applications</h3><p>Information + alerts</p><ul><li>Citizen app</li><li>Authority dashboard</li><li>Risk maps</li><li>Notifications</li></ul></div>
+</div>
+<div class="flow">Sensors → Edge AI → LoRa Multi-hop → Gateway Validation → Backhaul → Cloud Data Fusion → Server AI → Risk & Alerts</div>
+</div></section>
+
+<section id="eunit"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">02 — Field Intelligence</div><h2>E-Unit: intelligence starts at the sensor</h2><p>The field node is designed to do local processing instead of blindly sending every raw reading to the cloud.</p></div>
+<div class="grid">
+<div class="card"><h3>Controller</h3><p><b>ESP32-P4</b> acts as the field processing platform. Event-driven operation, local inference and selective communication help reduce unnecessary workload.</p></div>
+<div class="card"><h3>Sensor packages</h3><p>Sensor combinations are selected according to the hazard: flood, forest fire, landslide, earthquake, extreme heat, air pollution, gas leakage or water quality.</p></div>
+<div class="card"><h3>Edge AI</h3><p>A lightweight <b>Edge Impulse</b> model can classify local conditions, identify anomalies and attach a risk/confidence result to the event.</p></div>
+</div>
+<div class="sectiontop" style="margin-top:35px"><h2>Example: your physical air-quality E-unit</h2></div>
+<table><tr><th>Sensor</th><th>Measurement</th><th>Purpose</th></tr>
+<tr><td>SDS011</td><td>PM2.5 / PM10</td><td>Particulate pollution</td></tr>
+<tr><td>SGP40</td><td>VOC / VOC Index</td><td>VOC-related environmental signal</td></tr>
+<tr><td>MQ-2</td><td>Smoke / gas response</td><td>Low-cost smoke/gas indication</td></tr>
+<tr><td>MPU6050</td><td>Acceleration / motion</td><td>Vibration and motion indication</td></tr></table>
+<div class="callout"><b>Interpretability:</b> an alert can contain risk, confidence and the sensor conditions that contributed to the result instead of presenting only a black-box label.</div>
+</div></section>
+
+<section id="lora"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">03 — Resilient Communication</div><h2>LoRa connects the field when normal infrastructure is unreliable</h2><p>Pawan IoT uses a multi-hop LoRa field network so information can move through nearby nodes toward a gateway.</p></div>
+<div class="grid">
+<div class="card"><h3>Multi-hop</h3><p>If a node cannot directly reach the gateway, another node can forward information when the routing/link conditions allow it.</p></div>
+<div class="card"><h3>Reliable packets</h3><p>Messages can carry node ID, timestamp, sensor data, AI result, power state, hop count, message ID and integrity information.</p></div>
+<div class="card"><h3>Offline buffering</h3><p>If the internet/backhaul fails, the gateway can retain data and forward it after connectivity returns instead of losing the observation.</p></div>
+</div>
+<pre>Node ID | Timestamp | Sensor Data | AI Result | Power State | Hop Count | Message ID | Integrity</pre>
+<div class="callout yellow"><b>Key distinction:</b> LoRa is the communication layer. The AI decision is produced by the E-unit/gateway/server layers; LoRa transports the information.</div>
+</div></section>
+
+<section id="gateway"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">04 — Regional Intelligence</div><h2>Gateway: from one reading to regional evidence</h2><p>The gateway checks whether observations from nearby nodes support each other, helping distinguish isolated sensor anomalies from broader events.</p></div>
+<div class="steps">
+<div class="step"><div class="stepnum">01</div><div><h3>Receive</h3><p>Collect packets from multiple E-units through the LoRa network.</p></div></div>
+<div class="step"><div class="stepnum">02</div><div><h3>Validate</h3><p>Check message identity, sequence information, integrity and expected node behaviour.</p></div></div>
+<div class="step"><div class="stepnum">03</div><div><h3>Regional consensus</h3><p>Compare neighbouring observations. Several agreeing nodes provide stronger regional evidence than a single isolated reading.</p></div></div>
+<div class="step"><div class="stepnum">04</div><div><h3>Anomaly detection</h3><p>Gateway-level analysis can identify unusual patterns in the aggregated sensor observations.</p></div></div>
+<div class="step"><div class="stepnum">05</div><div><h3>Forward or buffer</h3><p>Send validated information to the backend when backhaul is available; otherwise retain it locally.</p></div></div>
+</div>
+<div class="callout"><b>Example:</b> one node reports extreme smoke while neighbouring nodes remain normal → investigate the isolated reading. Multiple nearby nodes report rising smoke and deteriorating air quality → regional confidence increases.</div>
+</div></section>
+
+<section id="ai"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">05 — Cloud Backend & Server AI</div><h2>From field observations to wider environmental intelligence</h2></div>
+<div class="grid">
+<div class="card"><h3>FastAPI</h3><p>Provides APIs for device data, users, processing, alerts and application access.</p></div>
+<div class="card"><h3>PostgreSQL</h3><p>Stores raw and processed observations, device information, AI outputs and alerts for historical analysis.</p></div>
+<div class="card"><h3>Data fusion</h3><p>Local observations can be combined with trusted external environmental, government and satellite datasets after time/location/unit normalization.</p></div>
+</div>
+<div class="sectiontop" style="margin-top:35px"><h2>Three levels of intelligence</h2></div>
+<div class="grid">
+<div class="card"><h3>Edge AI — “What is happening here?”</h3><p>Fast local classification and anomaly detection using sensor data.</p></div>
+<div class="card"><h3>Gateway AI — “Is it regional?”</h3><p>Neighbour comparison and regional validation increase confidence in a wider event.</p></div>
+<div class="card"><h3>Server AI — “What may happen next?”</h3><p>A temporal forecasting model can learn from historical, real-time and external environmental data to estimate future risk.</p></div>
+</div>
+<div class="callout" style="margin-top:20px"><b>Model wording:</b> the current Pawan architecture specifies a temporal forecasting model at the server. Do not claim a specific LSTM/XGBoost model until it is selected and validated.</div>
+</div></section>
+
+<section><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">06 — Reliability & Security</div><h2>Designed for imperfect field conditions</h2></div>
+<div class="grid">
+<div class="card"><h3>Offline-first</h3><p>Gateway buffering protects observations during temporary backhaul outages.</p></div>
+<div class="card"><h3>Integrity</h3><p>Message IDs, sequence information and integrity checks help identify corruption, duplicates and replayed messages. SHA-256 provides integrity, not authentication.</p></div>
+<div class="card"><h3>Encryption</h3><p>Backend communication can use TLS. Field messages can use authenticated encryption such as AES-GCM with correct nonce and key management.</p></div>
+<div class="card"><h3>Power aware</h3><p>Duty cycling, local inference and selective transmission reduce unnecessary energy use.</p></div>
+<div class="card"><h3>Sensor health</h3><p>Missing, implausible or drifting measurements can be flagged instead of being blindly trusted.</p></div>
+<div class="card"><h3>Redundancy</h3><p>Multiple E-units and communication paths reduce dependence on a single sensor or link.</p></div>
+</div>
+</div></section>
+
+<section><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">07 — Multi-Hazard Platform</div><h2>One architecture, different sensing packages</h2></div>
+<table><tr><th>Hazard</th><th>Example package</th><th>Local signal</th></tr>
+<tr><td>Flood</td><td>BME280 + 2–3 float switches + capacitive soil moisture</td><td>Water level / weather / soil condition</td></tr>
+<tr><td>Forest fire</td><td>BME280 + 2 smoke sensors</td><td>Heat / humidity / smoke</td></tr>
+<tr><td>Landslide</td><td>BME280 + soil moisture + MPU6050 + vibration sensors</td><td>Moisture + motion/vibration</td></tr>
+<tr><td>Earthquake</td><td>MPU6050 + vibration sensors</td><td>Low-cost ground-motion indication</td></tr>
+<tr><td>Extreme heat</td><td>BME280 + soil moisture</td><td>Temperature / humidity / soil state</td></tr>
+<tr><td>Air pollution</td><td>SDS011 + SGP40 + MQ-2 + BME280</td><td>PM + VOC + smoke/gas response</td></tr>
+<tr><td>Gas leakage</td><td>MQ-2 + SGP40 + BME280</td><td>Gas/smoke response + VOC</td></tr>
+<tr><td>Water quality</td><td><b>E-Float Unit:</b> pH + TDS + turbidity + optional DS18B20</td><td>pH + dissolved-solids indication + water clarity</td></tr>
+</table>
+</div></section>
+
+<section id="deployment"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">08 — Deployment</div><h2>How the network scales from a prototype to a regional system</h2><p>The platform is modular: field nodes and gateways can be added while keeping the application and backend layers common.</p></div>
+<div class="grid">
+<div class="card"><h3>Field layer</h3><p>Deploy E-units at hazard-prone locations and select the sensor package according to the local risk.</p></div>
+<div class="card"><h3>Regional layer</h3><p>Place gateways according to terrain, buildings, expected coverage and available communication paths.</p></div>
+<div class="card"><h3>Backhaul</h3><p>Gateway backhaul can use Ethernet, Wi-Fi or cellular connectivity depending on site availability.</p></div>
+<div class="card"><h3>Cloud</h3><p>FastAPI + PostgreSQL provides the shared data and application layer for monitoring, analysis and alerts.</p></div>
+<div class="card"><h3>Citizen application</h3><p>Flutter can present nearby risks, notifications, maps and safety information.</p></div>
+<div class="card"><h3>Authority dashboard</h3><p>Authorities can view node health, risk maps, trends, alerts and historical/predictive information.</p></div>
+</div>
+<div class="sectiontop" style="margin-top:35px"><h2>End-to-end example: emerging forest fire</h2></div>
+<div class="steps">
+<div class="step"><div class="stepnum">1</div><div><h3>Detect</h3><p>Smoke, temperature and humidity sensors observe a changing local condition.</p></div></div>
+<div class="step"><div class="stepnum">2</div><div><h3>Infer locally</h3><p>The E-unit preprocesses the data and produces a local fire-risk classification and confidence.</p></div></div>
+<div class="step"><div class="stepnum">3</div><div><h3>Communicate</h3><p>The event travels through LoRa toward the gateway, potentially through multiple hops.</p></div></div>
+<div class="step"><div class="stepnum">4</div><div><h3>Validate regionally</h3><p>The gateway compares nearby E-units to determine whether the pattern is consistent with a wider event.</p></div></div>
+<div class="step"><div class="stepnum">5</div><div><h3>Fuse and analyse</h3><p>The backend combines validated field information with available external data and server-side analysis.</p></div></div>
+<div class="step"><div class="stepnum">6</div><div><h3>Alert</h3><p>Users receive a risk notification with supporting evidence rather than only a raw sensor value.</p></div></div>
+</div>
+<div class="callout" style="margin-top:24px"><b>Core principle:</b> Pawan IoT does not depend on one sensor, one communication link or one AI layer. Local sensing provides immediate evidence, LoRa provides resilient transport, the gateway adds regional validation, and the cloud provides broader fusion and forecasting.</div>
+</div></section>
+
+
+<section id="efloat"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">09 — E-Unit Family</div>
+<h2>Two E-Unit variants for different environments</h2>
+<p>Pawan IoT uses the same distributed E-Unit concept in two physical variants: a <b>Normal E-Unit</b> for environmental/hazard monitoring on land, and an <b>E-Float Unit</b> designed to operate in or at the water body for direct water-quality monitoring.</p></div>
+
+<div class="grid">
+<div class="card"><h3>01 — Normal E-Unit</h3>
+<p>The standard field node is installed on land or at a monitored site. It uses hazard-specific sensors for air pollution, fire, landslide, earthquake, heat, flood context and other environmental events.</p>
+<p><b>Typical controller:</b> ESP32-P4 + LoRa + selected environmental sensors + local Edge AI.</p></div>
+
+<div class="card"><h3>02 — E-Float Unit</h3>
+<p>The E-Float Unit is the <b>water-monitoring variant</b>. It is designed to be placed in/at the water so its probes can directly measure water-quality parameters.</p>
+<p><b>Primary measurements:</b> pH, TDS and turbidity, with water temperature as an optional/supporting measurement.</p></div>
+
+<div class="card"><h3>Shared architecture</h3>
+<p>Both variants follow the same Pawan IoT pipeline:</p>
+<p><b>Sensors → ESP32-P4 → Local processing/Edge AI → LoRa → Gateway → Cloud</b></p>
+</div>
+</div>
+
+<div class="sectiontop" style="margin-top:35px"><h2>E-Float Unit — water-quality sensing</h2>
+<p>The E-Float Unit focuses on the condition of the water itself rather than only measuring the surrounding environment.</p></div>
+
+<table>
+<tr><th>Sensor</th><th>Parameter</th><th>Role</th></tr>
+<tr><td>pH Probe</td><td>pH / acidity-alkalinity</td><td>Detects changes in water acidity/alkalinity and abnormal pH conditions.</td></tr>
+<tr><td>TDS Sensor</td><td>Total dissolved solids indication</td><td>Provides an electrical-conductivity-derived indication of dissolved material in the water.</td></tr>
+<tr><td>Turbidity Sensor</td><td>Water clarity / suspended particles</td><td>Detects changes in water clarity caused by suspended particles.</td></tr>
+<tr><td>DS18B20 (optional/supporting)</td><td>Water temperature</td><td>Provides temperature context and can support temperature compensation where applicable.</td></tr>
+</table>
+
+<div class="sectiontop" style="margin-top:35px"><h2>How the E-Float Unit works</h2></div>
+<div class="steps">
+<div class="step"><div class="stepnum">1</div><div><h3>Deploy in the water</h3><p>The E-Float Unit is positioned so the water-quality probes are exposed to the monitored water while the electronics are protected inside the enclosure.</p></div></div>
+<div class="step"><div class="stepnum">2</div><div><h3>Acquire water-quality data</h3><p>The pH, TDS and turbidity sensors continuously or periodically provide measurements according to the configured sampling interval.</p></div></div>
+<div class="step"><div class="stepnum">3</div><div><h3>Local processing</h3><p>The ESP32-P4 filters/validates measurements and can calculate water-quality features or classify abnormal conditions locally.</p></div></div>
+<div class="step"><div class="stepnum">4</div><div><h3>Transmit through LoRa</h3><p>The E-Float Unit sends the water-quality status and relevant measurements through the Pawan IoT LoRa network toward a gateway.</p></div></div>
+<div class="step"><div class="stepnum">5</div><div><h3>Regional validation</h3><p>The gateway can compare water-quality observations from multiple E-Float Units or nearby environmental nodes to identify wider changes and suspicious isolated readings.</p></div></div>
+<div class="step"><div class="stepnum">6</div><div><h3>Cloud analysis and alert</h3><p>Validated measurements are stored and analysed. Applications can show water-quality trends, abnormal conditions and alerts.</p></div></div>
+</div>
+
+<div class="callout"><b>Key distinction:</b> the E-Float Unit is not simply another flood-level sensor. In the current Pawan IoT architecture, it is a dedicated <b>water-quality sensing unit</b> using pH, TDS and turbidity measurements.</div>
+
+<div class="callout yellow"><b>Prototype note:</b> pH and TDS sensors require calibration, and turbidity readings depend on the sensor and optical conditions. Final water-quality interpretation should therefore be based on calibrated measurements and appropriate reference standards.</div>
+
+<div class="sectiontop" style="margin-top:35px"><h2>Two-unit architecture</h2></div>
+<div class="flow">NORMAL E-UNIT → Land / Environmental Hazards → Edge AI → LoRa → Gateway</div>
+<div class="flow" style="margin-top:10px">E-FLOAT UNIT → Water / pH + TDS + Turbidity → Edge AI → LoRa → Gateway</div>
+<div class="flow" style="margin-top:10px">Both → Regional Validation → Cloud Backend → Server AI → Applications & Alerts</div>
+</div></section>
+
+<section id="sensors"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">09 — Complete Sensor Reference</div>
+<h2>Sensor-by-sensor technical details</h2>
+<p>Each sensor has a defined role in the environmental intelligence pipeline. The same Pawan IoT architecture can use different sensor combinations for different hazards.</p></div>
+
+<div class="grid">
+<div class="card"><h3>BME280</h3><p><b>Measures:</b> temperature, relative humidity and atmospheric pressure.</p><p><b>Used for:</b> flood, fire, landslide and extreme-heat nodes.</p><p><b>AI features:</b> temperature trend, humidity, pressure change and environmental context.</p></div>
+<div class="card"><h3>SDS011</h3><p><b>Measures:</b> particulate matter, primarily PM2.5 and PM10.</p><p><b>Used for:</b> air-pollution monitoring.</p><p><b>AI features:</b> PM concentration, trend, rate of change and pollution-event detection.</p></div>
+<div class="card"><h3>SGP40</h3><p><b>Measures:</b> VOC-related air-quality signal / VOC Index.</p><p><b>Used for:</b> air pollution and gas-related environmental context.</p><p><b>AI features:</b> VOC trend and anomaly features.</p></div>
+<div class="card"><h3>MQ-2</h3><p><b>Measures:</b> broad smoke/gas response from a low-cost semiconductor gas sensor.</p><p><b>Used for:</b> smoke and gas-leak indication.</p><p><b>Important:</b> it should not be presented as calibrated ppm concentration for a specific gas without calibration.</p></div>
+<div class="card"><h3>MPU6050</h3><p><b>Measures:</b> 3-axis acceleration and angular-rate data.</p><p><b>Used for:</b> vibration, motion, landslide and low-cost ground-motion indication.</p><p><b>AI features:</b> acceleration magnitude, vibration statistics and abnormal-motion patterns.</p></div>
+<div class="card"><h3>SW-420 / SW-520D</h3><p><b>Type:</b> low-cost vibration/shock switch modules.</p><p><b>Used for:</b> landslide and earthquake prototype detection.</p><p><b>Role:</b> provide discrete vibration-event signals that complement MPU6050 data.</p></div>
+<div class="card"><h3>Float Switches</h3><p><b>Type:</b> discrete water-level switches.</p><p><b>Used for:</b> flood monitoring.</p><p><b>Role:</b> detect predefined water-level thresholds rather than continuously measuring depth.</p></div>
+<div class="card"><h3>Capacitive Soil Moisture</h3><p><b>Measures:</b> relative soil-moisture condition.</p><p><b>Used for:</b> flood, landslide and extreme-heat context.</p><p><b>AI features:</b> wetness level, trend and rapid moisture changes.</p></div>
+<div class="card"><h3>DS18B20</h3><p><b>Measures:</b> temperature.</p><p><b>Used for:</b> water-quality nodes.</p><p><b>Role:</b> water-temperature measurement and contextual feature for water monitoring.</p></div>
+<div class="card"><h3>Analog TDS Sensor</h3><p><b>Measures:</b> electrical-conductivity-derived total dissolved solids indication.</p><p><b>Used for:</b> low-cost water-quality prototype.</p><p><b>Important:</b> requires calibration and temperature compensation for meaningful field measurements.</p></div>
+<div class="card"><h3>pH Probe</h3><p><b>Measures:</b> acidity/alkalinity of water.</p><p><b>Used for:</b> water-quality monitoring.</p><p><b>Role:</b> pH trend and abnormal-water-condition detection.</p></div>
+<div class="card"><h3>Turbidity Sensor</h3><p><b>Measures:</b> water turbidity / relative clarity.</p><p><b>Used for:</b> the E-Float Unit water-quality package.</p><p><b>Role:</b> identifies changes in suspended-particle-related water clarity.</p></div>
+</div>
+
+<div class="sectiontop" style="margin-top:38px"><h2>Hazard-to-sensor mapping</h2></div>
+<table>
+<tr><th>Hazard</th><th>Sensor package</th><th>Primary evidence</th><th>Supporting evidence</th></tr>
+<tr><td>Flood</td><td>BME280 + 2–3 float switches + capacitive soil moisture</td><td>Water-level threshold</td><td>Rain/weather context + soil wetness</td></tr>
+<tr><td>Forest fire</td><td>BME280 + 2 smoke sensors</td><td>Smoke</td><td>Temperature + humidity</td></tr>
+<tr><td>Landslide</td><td>BME280 + soil moisture + MPU6050 + SW-420/SW-520D</td><td>Motion/vibration</td><td>Soil moisture + weather</td></tr>
+<tr><td>Earthquake</td><td>MPU6050 + vibration switches</td><td>Ground-motion indication</td><td>Multiple-node agreement</td></tr>
+<tr><td>Extreme heat</td><td>BME280 + soil moisture</td><td>Temperature/humidity</td><td>Soil condition</td></tr>
+<tr><td>Air pollution</td><td>SDS011 + SGP40 + MQ-2 + BME280</td><td>PM2.5/PM10</td><td>VOC + smoke response + weather</td></tr>
+<tr><td>Gas leakage</td><td>MQ-2 + SGP40 + BME280</td><td>Smoke/gas response</td><td>VOC + environmental context</td></tr>
+<tr><td>Water quality</td><td>DS18B20 + TDS + pH + SEN0189</td><td>Water-quality indicators</td><td>Temperature/context</td></tr>
+</table>
+</div></section>
+
+<section id="models"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">10 — AI / ML Models</div>
+<h2>Three-level intelligence architecture</h2>
+<p>Pawan IoT separates immediate local inference from regional validation and longer-horizon server analysis.</p></div>
+
+<div class="grid">
+<div class="card"><h3>Model 1 — Edge AI Classifier</h3>
+<p><b>Platform:</b> Edge Impulse → ESP32-P4.</p>
+<p><b>Inputs:</b> cleaned sensor readings and derived features.</p>
+<p><b>Tasks:</b> normal/anomaly classification, hazard-event classification and local risk estimation.</p>
+<p><b>Output:</b> class + confidence + selected sensor evidence.</p>
+<p><b>Why:</b> low latency and operation without depending on internet connectivity.</p></div>
+
+<div class="card"><h3>Model 2 — Gateway Anomaly Detection</h3>
+<p><b>Platform:</b> Edge Impulse / gateway compute.</p>
+<p><b>Inputs:</b> observations from multiple nearby E-units.</p>
+<p><b>Tasks:</b> detect unusual regional patterns and suspicious node behaviour.</p>
+<p><b>Output:</b> anomaly score/confidence plus regional evidence.</p>
+<p><b>Why:</b> a single sensor should not automatically define a regional event.</p></div>
+
+<div class="card"><h3>Model 3 — Server Temporal Forecasting</h3>
+<p><b>Platform:</b> Linux/cloud server.</p>
+<p><b>Inputs:</b> historical observations, validated real-time data, external environmental datasets and gateway outputs.</p>
+<p><b>Tasks:</b> temporal risk forecasting and trend analysis.</p>
+<p><b>Output:</b> future risk estimate, forecast category and alerts.</p>
+<p><b>Status:</b> the architecture currently specifies a temporal forecasting model; a specific LSTM/XGBoost/Transformer should be named only after selection and validation.</p></div>
+</div>
+
+<div class="sectiontop" style="margin-top:38px"><h2>AI data pipeline</h2></div>
+<div class="steps">
+<div class="step"><div class="stepnum">1</div><div><h3>Acquire</h3><p>Read sensor values, timestamps, node status and communication metadata.</p></div></div>
+<div class="step"><div class="stepnum">2</div><div><h3>Clean</h3><p>Handle missing readings, invalid ranges, duplicates, noise and sensor-health conditions.</p></div></div>
+<div class="step"><div class="stepnum">3</div><div><h3>Feature engineering</h3><p>Create trends, rates of change, acceleration magnitude, rolling statistics and hazard-specific features.</p></div></div>
+<div class="step"><div class="stepnum">4</div><div><h3>Edge inference</h3><p>The lightweight model produces a local class/risk/confidence result.</p></div></div>
+<div class="step"><div class="stepnum">5</div><div><h3>Regional validation</h3><p>The gateway compares neighbouring nodes and performs anomaly/consensus analysis.</p></div></div>
+<div class="step"><div class="stepnum">6</div><div><h3>Server analysis</h3><p>Historical and multi-source information is used for temporal analysis and future-risk estimation.</p></div></div>
+<div class="step"><div class="stepnum">7</div><div><h3>Action</h3><p>Generate risk maps, alerts, trends and evidence for citizens and authorities.</p></div></div>
+</div>
+
+<div class="callout"><b>Interpretability:</b> Pawan IoT is designed so an alert can contain <i>what happened + confidence + sensor evidence + regional agreement</i>, rather than only a model label.</div>
+</div></section>
+
+<section id="platforms"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">11 — Complete Technology Platform</div>
+<h2>Hardware, communication, AI, backend and applications</h2></div>
+
+<table>
+<tr><th>Layer</th><th>Platform / Technology</th><th>Role</th></tr>
+<tr><td>Field controller</td><td>ESP32-P4</td><td>Sensor acquisition, preprocessing, local Edge AI and LoRa communication interface.</td></tr>
+<tr><td>Field communication</td><td>LoRa / SX1278-class radio</td><td>Long-range, low-power field communication and multi-hop networking.</td></tr>
+<tr><td>Gateway</td><td>ESP32-P4 + LoRa + backhaul</td><td>Collects nodes, validates regional data and forwards information.</td></tr>
+<tr><td>Backhaul</td><td>Ethernet / Wi-Fi / cellular</td><td>Gateway-to-server connectivity.</td></tr>
+<tr><td>Edge ML</td><td>Edge Impulse</td><td>Training/deployment workflow for lightweight edge models and anomaly detection.</td></tr>
+<tr><td>Backend</td><td>Python + FastAPI</td><td>REST APIs, data processing, device/application integration and alert services.</td></tr>
+<tr><td>Database</td><td>PostgreSQL</td><td>Sensor observations, devices, AI results, alerts and historical data.</td></tr>
+<tr><td>Geospatial</td><td>OpenStreetMap / GIS layer</td><td>Risk maps, node locations and affected-area visualization.</td></tr>
+<tr><td>Citizen application</td><td>Flutter</td><td>Mobile alerts, nearby hazards, maps and safety information.</td></tr>
+<tr><td>Authority dashboard</td><td>Web application</td><td>Node health, trends, risk maps, alerts and historical/predictive analysis.</td></tr>
+<tr><td>Server environment</td><td>Linux / cloud or institutional server</td><td>Backend services, data processing and server-side AI.</td></tr>
+<tr><td>Containerization</td><td>Docker</td><td>Reproducible deployment of backend/AI services where required.</td></tr>
+<tr><td>Authentication</td><td>OTP-based authentication</td><td>User/authority access control for the application layer.</td></tr>
+</table>
+
+<div class="sectiontop" style="margin-top:38px"><h2>Security stack</h2></div>
+<div class="grid">
+<div class="card"><h3>Field messages</h3><p>Message IDs, sequence numbers, integrity checks and authenticated encryption can be used to protect field communication.</p></div>
+<div class="card"><h3>Server transport</h3><p>HTTPS or MQTT over TLS can protect gateway-to-backend communication.</p></div>
+<div class="card"><h3>Access control</h3><p>Authenticated citizen and authority applications limit access to appropriate data and controls.</p></div>
+</div>
+</div></section>
+
+<section><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">12 — What makes the architecture different</div><h2>Distributed intelligence instead of cloud-only monitoring</h2></div>
+<div class="grid">
+<div class="card"><h3>Local</h3><p><b>Detect now.</b> Edge AI works close to the sensor and can operate without immediate internet access.</p></div>
+<div class="card"><h3>Regional</h3><p><b>Validate the event.</b> The gateway checks neighbouring evidence before increasing confidence in a regional hazard.</p></div>
+<div class="card"><h3>Global / cloud</h3><p><b>Understand the wider picture.</b> The server combines history and external data for broader analysis and forecasting.</p></div>
+</div>
+<div class="callout yellow"><b>Prototype honesty:</b> sensor accuracy, AI accuracy, LoRa coverage, power endurance and hazard-detection performance must be measured experimentally. The architecture describes the proposed system; it is not itself proof of field performance.</div>
+</div></section>
+
+
+<section id="cad"><div class="wrap">
+<div class="sectiontop"><div class="eyebrow">13 — CAD & Physical Design</div>
+<h2>E-Float Unit: CAD enclosure and assembly</h2>
+<p>The E-Float Unit has been developed as a physical enclosure concept in Autodesk Fusion. The CAD design shows the enclosure, internal electronics space and external interfaces for the submerged water-quality sensing arrangement.</p></div>
+
+<div class="cad-gallery">
+  <figure class="cad-main">
+    <img src="eunit.png" alt="Pawan IoT E-UNIT Unit CAD assembly">
+    <figcaption>E-Unit —Fusion CAD assembly view</figcaption>
+  </figure>
+  <div class="cad-side">
+    <figure><img src="efloat.png" alt="Pawan IoT E-Float Unit complete CAD model"><figcaption>Complete E-Float Unit </figcaption></figure>
+    <figure><img src="gateway.png" alt="Pawan IoT E-Float Unit enclosure CAD model"><figcaption>Complete Gateway Unit </figcaption></figure>
+  </div>
+</div>
+
+<div class="grid" style="margin-top:22px">
+<div class="card"><h3>Water-level interfaces</h3><p>The cylindrical E-Float housing provides a protected electronics enclosure with external interfaces for the water-quality probes that are exposed to the monitored water.</p></div>
+<div class="card"><h3>Sensor integration</h3><p>The CAD assembly provides a physical arrangement for the pH, TDS and turbidity sensing components while keeping the electronics protected inside the enclosure.</p></div>
+<div class="card"><h3>Prototype-ready design</h3><p>The enclosure can be 3D printed and iterated as the sensor mounting, sealing and field installation requirements are refined.</p></div>
+</div>
+
+<div class="callout yellow"><b>CAD status:</b> these images represent the current CAD/prototype design concept. Final waterproofing, sealing, mechanical strength, probe mounting and sensor calibration should be validated before outdoor deployment.</div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap"><b>Pawan IoT</b> · Environmental Intelligence Network<br><span>GitHub Pages-ready static website. No backend is required for this documentation page.</span></div></footer>
+</body>
+</html>
